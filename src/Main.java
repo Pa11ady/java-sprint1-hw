@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Scanner;
 
 enum Command {
@@ -36,17 +37,23 @@ public class Main {
                 case READ_MONTH_REPORTS:
                     System.out.println(command);
                     for (int i = 1; i <= MONTH_COUNT; i++) {
+                        System.out.println(GetMonthPath(i));
                         String text = readFileContentsOrNull(GetMonthPath(i));
-                        System.out.println(text);
-                        System.out.println("======");
+                        if (text != null) {
+                            String[][] monthTable = splitText(text);
+                            //System.out.println(text);
+                        }
                     }
                     break;
                 case READ_YEAR_REPORT:
                     System.out.println(command);
                     String path = DIRECTORY + File.separator + YEAR_FILE_NAME + ".csv";
                     String text = readFileContentsOrNull(path);
-                    System.out.println(text);
-                    System.out.println("======");
+                    if (text != null) {
+                        //System.out.println(text);
+                        String[][] yearTable = splitText(text);
+                        System.out.println("======");
+                    }
                     break;
                 case CHECK_REPORTS:
                     System.out.println(command);
@@ -62,6 +69,7 @@ public class Main {
     }
 
     static void printMenu() {
+        System.out.println("================================================");
         System.out.println("Что вы хотите сделать?");
         System.out.println("1 - Считать все месячные отчёты");
         System.out.println("2 - Считать годовой отчёт");
@@ -69,6 +77,7 @@ public class Main {
         System.out.println("4 - Вывести информацию о всех месячных отчётах");
         System.out.println("5 - Вывести информацию о годовом отчёте");
         System.out.println("0 - Выход");
+        System.out.println("================================================");
     }
 
     static Command inputCommandOrNull(Scanner scanner) {
@@ -108,5 +117,16 @@ public class Main {
         }
     }
 
+    static String[][] splitText(String text) {
+        String[] textLines = text.split("\n");
+        int rowsCount = textLines.length;
+        String[][] table = new String[rowsCount][];
+        for (int i = 0; i < rowsCount; i++) {
+            String[] cols = textLines[i].split(", ");
+            System.out.println(Arrays.toString(cols));
+            table[i] = cols;
+        }
+        return table;
+    }
 }
 

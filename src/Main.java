@@ -19,9 +19,18 @@ public class Main {
     public static final String YEAR_FILE_NAME = "y.2021";
     public static final String MONTH_FILE_NAME = "m.2021";
     public static final int MONTH_COUNT = 3;
+    //Константа только ссылка, но массив к сожалению не константный
+    public static final String[] MONTH = {
+            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+    };
 
     public static void main(String[] args) {
+        int tpm = Integer.parseInt("01");
         Scanner scanner = new Scanner(System.in);
+        MonthlyReport monthlyReport = null;
+        YearlyReport yearlyReport = null;
+
         while (true) {
             printMenu();
             Command command =  inputCommandOrNull(scanner);
@@ -40,8 +49,7 @@ public class Main {
                         System.out.println(GetMonthPath(i));
                         String text = readFileContentsOrNull(GetMonthPath(i));
                         if (text != null) {
-                            String[][] monthTable = splitText(text);
-                            //System.out.println(text);
+                            String[][] monthTable = splitText(text, ",");
                         }
                     }
                     break;
@@ -50,19 +58,36 @@ public class Main {
                     String path = DIRECTORY + File.separator + YEAR_FILE_NAME + ".csv";
                     String text = readFileContentsOrNull(path);
                     if (text != null) {
-                        //System.out.println(text);
-                        String[][] yearTable = splitText(text);
+                        String[][] yearTable = splitText(text, ",");
+                        String nameYear = YEAR_FILE_NAME.replaceFirst("y.","");
+                        yearlyReport = createYearlyReport(yearTable, nameYear);
+                        yearlyReport.print();
                         System.out.println("======");
                     }
                     break;
                 case CHECK_REPORTS:
                     System.out.println(command);
+                    if  (monthlyReport != null && yearlyReport != null) {
+
+                    } else {
+                        System.out.println("Считайте, пожалуйста, отчёты");
+                    }
                     break;
                 case PRINT_MONTHLY_REPORTS:
                     System.out.println(command);
+                    if  (monthlyReport != null) {
+
+                    } else {
+                        System.out.println("Считайте, пожалуйста, месячные отчеты");
+                    }
                     break;
                 case PRINT_YEAR_REPORT:
                     System.out.println(command);
+                    if  (yearlyReport != null) {
+
+                    } else {
+                        System.out.println("Считайте, пожалуйста, годовой отчёт");
+                    }
                     break;
             }
         }
@@ -117,16 +142,39 @@ public class Main {
         }
     }
 
-    static String[][] splitText(String text) {
+    static String[][] splitText(String text, String regex) {
         String[] textLines = text.split("\n");
         int rowsCount = textLines.length;
         String[][] table = new String[rowsCount][];
         for (int i = 0; i < rowsCount; i++) {
-            String[] cols = textLines[i].split(", ");
+            String[] cols = textLines[i].split(regex);
             System.out.println(Arrays.toString(cols));
             table[i] = cols;
         }
         return table;
+    }
+
+    static  MonthlyReport createMonthlyReport(String[][] monthTable, String nameMonth) {
+        //int rowsCount =  yearTable.length;
+        return null;
+    }
+
+    static YearlyReport createYearlyReport(String[][] yearTable, String nameYear) {
+        YearlyReport yearlyReport = new YearlyReport(nameYear);
+        //0-я чтрока отладочная с заголовками
+        for (int i = 1; i < yearTable.length; i++) {
+            System.out.println(yearTable[i][0]);
+            int indexMonth = Integer.parseInt(yearTable[i][0]) - 1;
+            String nameMonth = MONTH[indexMonth];
+            int amount = Integer.parseInt(yearTable[i][1]);
+            boolean isExpense = Boolean.parseBoolean(yearTable[i][2]);
+            if (isExpense) {
+                yearlyReport.addExpensesByMonths(nameMonth, amount);
+            } else {
+                yearlyReport.addIncomesByMonths(nameMonth, amount);
+            }
+        }
+        return yearlyReport;
     }
 }
 

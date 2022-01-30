@@ -26,7 +26,6 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        int tpm = Integer.parseInt("01");
         Scanner scanner = new Scanner(System.in);
         MonthlyReport monthlyReport = null;
         YearlyReport yearlyReport = null;
@@ -46,10 +45,10 @@ public class Main {
                 case READ_MONTH_REPORTS:
                     System.out.println(command);
                     for (int i = 1; i <= MONTH_COUNT; i++) {
-                        System.out.println(GetMonthPath(i));
                         String text = readFileContentsOrNull(GetMonthPath(i));
                         if (text != null) {
                             String[][] monthTable = splitText(text, ",");
+                            monthlyReport = createMonthlyReport(monthTable, i);
                         }
                     }
                     break;
@@ -148,30 +147,41 @@ public class Main {
         String[][] table = new String[rowsCount][];
         for (int i = 0; i < rowsCount; i++) {
             String[] cols = textLines[i].split(regex);
-            System.out.println(Arrays.toString(cols));
             table[i] = cols;
         }
         return table;
     }
 
-    static  MonthlyReport createMonthlyReport(String[][] monthTable, String nameMonth) {
-        //int rowsCount =  yearTable.length;
-        return null;
+    static  MonthlyReport createMonthlyReport(String[][] monthTable, int month) {
+        MonthlyReport monthlyReport = new MonthlyReport();
+        //0-я чтрока отладочная с заголовками
+        for (int i = 1; i < monthTable.length; i++) {
+            String itemName = monthTable[i][0];
+            boolean isExpense = Boolean.parseBoolean(monthTable[i][1]);
+            int quantity = Integer.parseInt(monthTable[i][2]);
+            int sumOfOne = Integer.parseInt(monthTable[i][3]);
+            if (isExpense) {
+                monthlyReport.addDetailExpenses(month, itemName, sumOfOne, quantity);
+            } else {
+                monthlyReport.addDetailIncomes(month, itemName, sumOfOne, quantity);
+            }
+        }
+
+        monthlyReport.print();
+        return monthlyReport;
     }
 
     static YearlyReport createYearlyReport(String[][] yearTable, String nameYear) {
         YearlyReport yearlyReport = new YearlyReport(nameYear);
         //0-я чтрока отладочная с заголовками
         for (int i = 1; i < yearTable.length; i++) {
-            System.out.println(yearTable[i][0]);
-            int indexMonth = Integer.parseInt(yearTable[i][0]) - 1;
-            String nameMonth = MONTH[indexMonth];
+            int month = Integer.parseInt(yearTable[i][0]);
             int amount = Integer.parseInt(yearTable[i][1]);
             boolean isExpense = Boolean.parseBoolean(yearTable[i][2]);
             if (isExpense) {
-                yearlyReport.addExpensesByMonths(nameMonth, amount);
+                yearlyReport.addExpensesByMonths(month, amount);
             } else {
-                yearlyReport.addIncomesByMonths(nameMonth, amount);
+                yearlyReport.addIncomesByMonths(month, amount);
             }
         }
         return yearlyReport;

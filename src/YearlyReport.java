@@ -2,8 +2,8 @@ import java.util.HashMap;
 
 public class YearlyReport {
     String name;
-    private HashMap<String, Integer> expensesByMonths;
-    private HashMap<String, Integer> incomesByMonths;
+    private HashMap<Integer, Integer> expensesByMonths;
+    private HashMap<Integer, Integer> incomesByMonths;
 
     public YearlyReport(String name) {
         this.name = name;
@@ -11,12 +11,12 @@ public class YearlyReport {
         incomesByMonths = new HashMap<>();
     }
 
-    public void addExpensesByMonths(String nameMonth, int income) {
-        expensesByMonths.put(nameMonth, income);
+    public void addExpensesByMonths(int month, int expense) {
+        expensesByMonths.put(month, expense);
     }
 
-    public void addIncomesByMonths(String nameMonth, int income) {
-        incomesByMonths.put(nameMonth, income);
+    public void addIncomesByMonths(int month, int income) {
+        incomesByMonths.put(month, income);
     }
 
     public void print() {

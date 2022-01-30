@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeSet;
 
 public class YearlyReport {
     String name;
@@ -19,17 +22,22 @@ public class YearlyReport {
         incomesByMonths.put(month, income);
     }
 
-    public void print() {
-        System.out.println("----");
-        System.out.println(name);
-        System.out.println("ex=");
-        for (var entry : expensesByMonths.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
+    public ArrayList<Integer> getListMonths() {
+        TreeSet<Integer> months = new TreeSet<>();
+        for (Integer key : expensesByMonths.keySet()) {
+            months.add(key);
         }
-        System.out.println("in=");
-        for (var entry : incomesByMonths.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
+        for (Integer key : incomesByMonths.keySet()) {
+            months.add(key);
         }
-        System.out.println("----");
+        return  new ArrayList<Integer>(months);
+    }
+
+    public void printYearStatistics() {
+        System.out.println("Год " + name);
+        ArrayList<Integer> months = getListMonths();
+        for (int month : months) {
+            
+        }
     }
 }

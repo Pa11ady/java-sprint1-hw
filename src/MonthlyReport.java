@@ -31,6 +31,10 @@ public class MonthlyReport {
         items.add(new Item(itemName, amount));
     }
 
+    public void printMonthsStatistics() {
+
+    }
+
     public void print() {
         System.out.println("----");
         System.out.println("ex=");

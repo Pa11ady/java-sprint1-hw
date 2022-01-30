@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Scanner;
 
 enum Command {
@@ -19,11 +18,6 @@ public class Main {
     public static final String YEAR_FILE_NAME = "y.2021";
     public static final String MONTH_FILE_NAME = "m.2021";
     public static final int MONTH_COUNT = 3;
-    //Константа только ссылка, но массив к сожалению не константный
-    public static final String[] MONTH = {
-            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-    };
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -39,33 +33,28 @@ public class Main {
             }
             switch (command) {
                 case EXIT:
-                    System.out.println(command);
                     scanner.close();
                     return;
                 case READ_MONTH_REPORTS:
-                    System.out.println(command);
                     for (int i = 1; i <= MONTH_COUNT; i++) {
                         String text = readFileContentsOrNull(GetMonthPath(i));
                         if (text != null) {
-                            String[][] monthTable = splitText(text, ",");
+                            String[][] monthTable = splitText(text);
                             monthlyReport = createMonthlyReport(monthTable, i);
                         }
                     }
                     break;
                 case READ_YEAR_REPORT:
-                    System.out.println(command);
                     String path = DIRECTORY + File.separator + YEAR_FILE_NAME + ".csv";
                     String text = readFileContentsOrNull(path);
                     if (text != null) {
-                        String[][] yearTable = splitText(text, ",");
+                        String[][] yearTable = splitText(text);
                         String nameYear = YEAR_FILE_NAME.replaceFirst("y.","");
                         yearlyReport = createYearlyReport(yearTable, nameYear);
-                        yearlyReport.print();
-                        System.out.println("======");
                     }
                     break;
                 case CHECK_REPORTS:
-                    System.out.println(command);
+                    // System.out.println(yearlyReport.getListMonths());
                     if  (monthlyReport != null && yearlyReport != null) {
 
                     } else {
@@ -73,17 +62,15 @@ public class Main {
                     }
                     break;
                 case PRINT_MONTHLY_REPORTS:
-                    System.out.println(command);
                     if  (monthlyReport != null) {
-
+                        monthlyReport.printMonthsStatistics();
                     } else {
                         System.out.println("Считайте, пожалуйста, месячные отчеты");
                     }
                     break;
                 case PRINT_YEAR_REPORT:
-                    System.out.println(command);
                     if  (yearlyReport != null) {
-
+                        yearlyReport.printYearStatistics();
                     } else {
                         System.out.println("Считайте, пожалуйста, годовой отчёт");
                     }
@@ -141,12 +128,12 @@ public class Main {
         }
     }
 
-    static String[][] splitText(String text, String regex) {
+    static String[][] splitText(String text) {
         String[] textLines = text.split("\n");
         int rowsCount = textLines.length;
         String[][] table = new String[rowsCount][];
         for (int i = 0; i < rowsCount; i++) {
-            String[] cols = textLines[i].split(regex);
+            String[] cols = textLines[i].split(",");
             table[i] = cols;
         }
         return table;

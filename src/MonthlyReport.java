@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class MonthlyReport {
     private HashMap<Integer, ArrayList<Item>> detailExpenses;
@@ -32,7 +31,53 @@ public class MonthlyReport {
     }
 
     public void printMonthsStatistics() {
+        ArrayList<Integer> months = getListMonths();
+        for (int month : months) {
+            Item maxItemIncome = getMaxItemIncome(month);
+            Item maxItemExpense = getMaxItemExpense(month);
+            System.out.println(MonthConvector.getMonthName(month));
+            System.out.print("  Самый прибыльный товар:");
+            if (maxItemIncome != null) {
+                System.out.println(maxItemIncome);
+            } else {
+                System.out.println("\tнет");
+            }
+            System.out.print("  Самая большая трата:");
+            if (maxItemExpense != null) {
+                System.out.println(maxItemExpense);
+            } else {
+                System.out.println("\tнет");
+            }
+        }
+    }
 
+    private Item getMaxItemExpense(int month) {
+        ArrayList<Item> items = detailExpenses.get(month);
+        if (items == null) {
+            return  null;
+        }
+        return Collections.max(items);
+    }
+
+    private Item getMaxItemIncome(int month) {
+        ArrayList<Item>  items = detailIncomes.get(month);
+        if (items == null) {
+            return  null;
+        }
+        return Collections.max(items);
+    }
+
+    public ArrayList<Integer> getListMonths() {
+        print();
+        TreeSet<Integer> months = new TreeSet<>();
+        for (Integer key : detailExpenses.keySet()) {
+            months.add(key);
+        }
+        for (Integer key : detailIncomes.keySet()) {
+            months.add(key);
+        }
+
+        return new ArrayList<Integer>(months);
     }
 
     public void print() {
@@ -55,7 +100,7 @@ public class MonthlyReport {
 Для упрощения не буду писать геттеры и сеттеры это чисто как структура в Си
 Конструкто для удобства
 */
-class Item {
+class Item implements Comparable<Item>{
     String name;
     int amount;
 
@@ -64,13 +109,13 @@ class Item {
         this.amount = amount;
     }
 
-    /*@Override
     public String toString() {
-        return "Item{" +
-                "name='" + name + '\'' +
-                ", amount=" + amount +
-                '}';
-    }*/
-    public String toString() {return name + "\t" + amount;}
+        return "\t" + name + "\t" + amount;
+    }
+
+    @Override
+    public int compareTo(Item o){
+        return amount - o.amount;
+    }
 }
 

@@ -36,12 +36,14 @@ public class Main {
                     scanner.close();
                     return;
                 case READ_MONTH_REPORTS:
+                    //защита от повторного чтения файла не предусмотрена
                     for (int i = 1; i <= MONTH_COUNT; i++) {
                         String text = readFileContentsOrNull(GetMonthPath(i));
                         if (text != null) {
                             String[][] monthTable = splitText(text);
-                            monthlyReport = createMonthlyReport(monthTable, i);
+                            monthlyReport = createMonthlyReport(monthlyReport, monthTable, i);
                         }
+                        monthlyReport.print();
                     }
                     break;
                 case READ_YEAR_REPORT:
@@ -139,8 +141,10 @@ public class Main {
         return table;
     }
 
-    static  MonthlyReport createMonthlyReport(String[][] monthTable, int month) {
-        MonthlyReport monthlyReport = new MonthlyReport();
+    static  MonthlyReport createMonthlyReport(MonthlyReport monthlyReport, String[][] monthTable, int month) {
+        if (monthlyReport == null) {
+            monthlyReport = new MonthlyReport();
+        }
         //0-я чтрока отладочная с заголовками
         for (int i = 1; i < monthTable.length; i++) {
             String itemName = monthTable[i][0];
@@ -153,8 +157,6 @@ public class Main {
                 monthlyReport.addDetailIncomes(month, itemName, sumOfOne, quantity);
             }
         }
-
-        monthlyReport.print();
         return monthlyReport;
     }
 

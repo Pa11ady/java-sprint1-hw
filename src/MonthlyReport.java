@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class MonthlyReport {
-    private HashMap<Integer, ArrayList<Item>> detailExpenses;
-    private HashMap<Integer, ArrayList<Item>> detailIncomes;
+    private final HashMap<Integer, ArrayList<Item>> detailExpenses;
+    private final HashMap<Integer, ArrayList<Item>> detailIncomes;
 
     public MonthlyReport() {
         detailExpenses = new HashMap<>();
@@ -68,29 +68,28 @@ public class MonthlyReport {
     }
 
     public ArrayList<Integer> getListMonths() {
-        print();
         TreeSet<Integer> months = new TreeSet<>();
-        for (Integer key : detailExpenses.keySet()) {
-            months.add(key);
-        }
-        for (Integer key : detailIncomes.keySet()) {
-            months.add(key);
-        }
-
-        return new ArrayList<Integer>(months);
+        months.addAll(detailExpenses.keySet());
+        months.addAll(detailIncomes.keySet());
+        return new ArrayList<>(months);
     }
 
-    public void print() {
-        System.out.println("----");
-        System.out.println("ex=");
-        for (var entry : detailExpenses.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue().toString());
+    public int getTotalExpenseByMonth(int month) {
+        ArrayList<Item> items = detailExpenses.get(month);
+        return  sum(items);
+    }
+
+    public int getTotalIncomeByMonth(int month) {
+        ArrayList<Item> items = detailIncomes.get(month);
+        return  sum(items);
+    }
+    private int sum(ArrayList<Item> list) {
+        if (list == null) return 0;
+        int sum = 0;
+        for (var el : list) {
+            sum += el.amount;
         }
-        System.out.println("in=");
-        for (var entry : detailIncomes.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue().toString());
-        }
-        System.out.println("----");
+        return sum;
     }
 }
 

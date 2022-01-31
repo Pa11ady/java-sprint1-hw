@@ -4,8 +4,8 @@ import java.util.TreeSet;
 
 public class YearlyReport {
     String name;
-    private HashMap<Integer, Integer> expensesByMonths;
-    private HashMap<Integer, Integer> incomesByMonths;
+    private final HashMap<Integer, Integer> expensesByMonths;   //Среда просила final
+    private final HashMap<Integer, Integer> incomesByMonths;
 
     public YearlyReport(String name) {
         this.name = name;
@@ -23,13 +23,17 @@ public class YearlyReport {
 
     public ArrayList<Integer> getListMonths() {
         TreeSet<Integer> months = new TreeSet<>();
-        for (Integer key : expensesByMonths.keySet()) {
-            months.add(key);
-        }
-        for (Integer key : incomesByMonths.keySet()) {
-            months.add(key);
-        }
-        return  new ArrayList<Integer>(months);
+        months.addAll(expensesByMonths.keySet());
+        months.addAll(incomesByMonths.keySet());
+        return new ArrayList<>(months);
+    }
+
+    public int getTotalExpenseByMonth(int month) {
+        return  expensesByMonths.getOrDefault(month, 0);
+    }
+
+    public int getTotalIncomeByMonth(int month) {
+        return  incomesByMonths.getOrDefault(month, 0);
     }
 
     public void printYearStatistics() {
@@ -37,8 +41,8 @@ public class YearlyReport {
         int countIncomes = 0;
         int totalExpenses = 0;
         int totalIncomes = 0;
-        double AverageExpenses = 0;
-        double AverageIncomes = 0;
+        double AverageExpenses;
+        double AverageIncomes;
         ArrayList<Integer> months = getListMonths();
 
         System.out.println("Год " + name);

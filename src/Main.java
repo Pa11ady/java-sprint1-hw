@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 enum Command {
     EXIT,
@@ -43,7 +44,6 @@ public class Main {
                             String[][] monthTable = splitText(text);
                             monthlyReport = createMonthlyReport(monthlyReport, monthTable, i);
                         }
-                        monthlyReport.print();
                     }
                     break;
                 case READ_YEAR_REPORT:
@@ -56,9 +56,8 @@ public class Main {
                     }
                     break;
                 case CHECK_REPORTS:
-                    // System.out.println(yearlyReport.getListMonths());
                     if  (monthlyReport != null && yearlyReport != null) {
-
+                        checkReports(yearlyReport, monthlyReport);
                     } else {
                         System.out.println("Считайте, пожалуйста, отчёты");
                     }
@@ -174,6 +173,29 @@ public class Main {
             }
         }
         return yearlyReport;
+    }
+
+    static void checkReports(YearlyReport yearlyReport, MonthlyReport monthlyReport ) {
+        boolean isCorrect = true;
+        //на тот случай если в годовом и месячном отчётах разные месяцы
+        TreeSet<Integer> months = new TreeSet<>();
+        months.addAll(yearlyReport.getListMonths());
+        months.addAll(monthlyReport.getListMonths());
+        int errorCnt = 0;
+        for (int month : months) {
+            if (yearlyReport.getTotalExpenseByMonth(month) !=
+                    monthlyReport.getTotalExpenseByMonth(month) ||
+                    yearlyReport.getTotalIncomeByMonth(month) !=
+                            monthlyReport.getTotalIncomeByMonth(month)) {
+                errorCnt++;
+                isCorrect = false;
+                System.out.println("Ошибка " + errorCnt + ": " + MonthConvector.getMonthName(month));
+            }
+        }
+
+        if (isCorrect) {
+            System.out.println("Сверка данных успешно завершена!");
+        }
     }
 }
 

@@ -1,6 +1,25 @@
 import java.util.*;
 
 public class MonthlyReport {
+    private static class Item implements Comparable<Item>{
+        String name;
+        int amount;
+
+        public Item(String name, int amount) {
+            this.name = name;
+            this.amount = amount;
+        }
+
+        @Override
+        public String toString() {
+            return "\t" + name + "\t" + amount;
+        }
+
+        @Override
+        public int compareTo(Item o){
+            return amount - o.amount;
+        }
+    }
     private final HashMap<Integer, ArrayList<Item>> detailExpenses;
     private final HashMap<Integer, ArrayList<Item>> detailIncomes;
 
@@ -93,28 +112,5 @@ public class MonthlyReport {
     }
 }
 
-/*Вспомогательный локальный класс, можно было бы сделать внутренним.
-В задании в тестовых данных целые числа и потому будем использовать int
-Хотя реальных задачах это вещественные числа
-Для упрощения не буду писать геттеры и сеттеры это чисто как структура в Си
-Конструкто для удобства
-*/
-class Item implements Comparable<Item>{
-    String name;
-    int amount;
 
-    public Item(String name, int amount) {
-        this.name = name;
-        this.amount = amount;
-    }
-
-    public String toString() {
-        return "\t" + name + "\t" + amount;
-    }
-
-    @Override
-    public int compareTo(Item o){
-        return amount - o.amount;
-    }
-}
 

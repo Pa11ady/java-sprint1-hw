@@ -4,7 +4,7 @@ import java.util.TreeSet;
 
 public class YearlyReport {
     String name;
-    private final HashMap<Integer, Integer> expensesByMonths;   //Среда просила final
+    private final HashMap<Integer, Integer> expensesByMonths;
     private final HashMap<Integer, Integer> incomesByMonths;
 
     public YearlyReport(String name) {

@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 public class MonthlyReport {
     private static class Item implements Comparable<Item>{
@@ -29,7 +32,6 @@ public class MonthlyReport {
     }
 
     public void addDetailExpenses(int month, String itemName, int sumOfOne, int quantity) {
-        //detailExpenses.put(month, income);
         int amount = sumOfOne * quantity;
         ArrayList<Item> items = detailExpenses.get(month);
         if (items == null) {

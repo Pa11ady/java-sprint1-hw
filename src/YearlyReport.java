@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 public class YearlyReport {
-    String name;
+    private String name;
     private final HashMap<Integer, Integer> expensesByMonths;
     private final HashMap<Integer, Integer> incomesByMonths;
 
